@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+
+{% block title %}Change article{% endblock %}
+
+{% block content %}
+<h1>Change article</h1>
+<form action="{{ url_for('change_article', id=article.id) }}" method="POST">
+    <input type="text" name="title" placeholder="Header" class="form-control mb-3" value="{{article.title}}" required>
+    <textarea name="intro" placeholder="Description" class="form-control mb-3" required>{{article.intro}}</textarea>
+    <textarea name="text" placeholder="Text" class="form-control mb-3" required>{{article.text}}</textarea>
+    <button type="submit" class="btn btn-success">Change</button>
+    <a href="/" class="btn btn-secondary">Cancel</a>
+</form>
+
+
+
+
+{% endblock %}

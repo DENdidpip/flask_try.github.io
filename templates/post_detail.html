@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+
+{% block title %}{{ article.title }}{% endblock %}
+
+{% block content %}
+  <h1>{{ article.title }}</h1>
+  <p><small class="text-muted">{{ article.date.strftime('%d.%m.%Y %H:%M') }}</small></p>
+  <p>{{ article.text }}</p>
+  <a href="/" class="btn btn-secondary mt-3">Back</a>
+{% endblock %}
