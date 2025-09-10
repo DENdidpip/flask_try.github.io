@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+
+{% block title %}Home{% endblock %}
+
+{% block content %}
+<h1 class="mb-4">All articles</h1>
+
+{% for posts in articles %}<!--cycle articles-->
+<div class="card my-3">
+    <div class="card-body">
+        <h5 class="card-title">{{ posts.title }}</h5>
+        <p class="card-text">{{ posts.intro }}</p>
+        <p><small class="text-muted">{{ posts.date.strftime('%d.%m.%Y %H:%M') }}</small></p>
+        <a href="{{ url_for('post_detail', id=posts.id) }}" class="btn btn-primary">Read</a><!--on click to post_detail-->
+        <form action="{{ url_for('delete_article', id=posts.id) }}" method="post" style="display:inline" onsubmit="return confirm('real')">
+            <button type="submit" class="btn btn-danger">Delete</button>
+        </form>
+        <a href="{{ url_for('change_article', id=posts.id) }}" class="btn btn-warning">Change</a>
+    </div>
+</div>
+{% else %}
+<p>There is no articles yet...</p>
+{% endfor %}
+{% endblock %}
