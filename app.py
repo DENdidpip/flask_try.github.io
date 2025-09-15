@@ -43,13 +43,14 @@ def sign_up():
         try:
             db.session.add(user)
             db.session.commit()
-            return render_template("welcome.html", nick=nick, email=email)
+            articles = Article.query.order_by(Article.date.desc()).all()
+            return render_template("index.html", articles=articles)
         except IntegrityError:
             db.session.rollback()  # Откат транзакции
             warning = "User with name or email already exists"
         except Exception as e:
             db.session.rollback()
-            warning = f"Ошибка: {e}"
+            warning = f"Error: {e}"
 
     return render_template("sign_up.html", warning=warning)
 
@@ -81,7 +82,7 @@ def create_article():
         try:
             db.session.add(article)
             db.session.commit()
-            return redirect('/')
+            return redirect('/home')
         except:
             return "Ошибка при добавлении статьи"
     else:
@@ -93,7 +94,7 @@ def delete_article(id):
     try:
         db.session.delete(article)
         db.session.commit()
-        return redirect('/')
+        return redirect('/home')
     except:
         return "Ошибка при удалении статьи"
 
