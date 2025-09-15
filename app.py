@@ -20,8 +20,9 @@ class Article(db.Model):
         return f'<Article {self.id}>'
 
 
-# ===== МАРШРУТЫ =====
 @app.route('/')
+def login():
+    return render_template("login.html")
 @app.route('/home')
 def main():
     articles = Article.query.order_by(Article.date.desc()).all()
