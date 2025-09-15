@@ -1,5 +1,6 @@
 from flask import Flask, render_template, request, redirect
 from flask_sqlalchemy import SQLAlchemy
+from sqlalchemy.exc import IntegrityError
 from datetime import datetime as dt
 
 app = Flask(__name__)
@@ -18,6 +19,40 @@ class Article(db.Model):
 
     def __repr__(self):
         return f'<Article {self.id}>'
+
+class User(db.Model):
+    id = db.Column(db.Integer, primary_key = True)
+    nick = db.Column(db.String(50), nullable = False, unique = True)
+    email = db.Column(db.String(120), nullable=False, unique=True)
+    password = db.Column(db.String(128), nullable=False)
+
+    def __repr__(self):
+        return f'<User {self.nick}>'
+
+
+@app.route('/sign_up', methods=['POST', 'GET'])
+def sign_up():
+    warning = None  # Для сообщения об ошибке
+    if request.method == "POST":
+        nick = request.form['nick']
+        email = request.form['email']
+        password = request.form['password']
+
+        user = User(nick=nick, email=email, password=password)
+
+        try:
+            db.session.add(user)
+            db.session.commit()
+            return render_template("welcome.html", nick=nick, email=email)
+        except IntegrityError:
+            db.session.rollback()  # Откат транзакции
+            warning = "User with name or email already exists"
+        except Exception as e:
+            db.session.rollback()
+            warning = f"Ошибка: {e}"
+
+    return render_template("sign_up.html", warning=warning)
+
 
 
 @app.route('/')
